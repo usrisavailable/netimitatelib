@@ -1,0 +1,27 @@
+#!/usr/bin/expect -f
+
+set timeout 5  ;# 设置超时时间（单位：秒）
+set max_loops 500  ;# 设置最大循环次数
+set loop_counter 0  ;# 初始化循环计数器
+
+while {$loop_counter < $max_loops} {
+    incr loop_counter  ;# 增加循环计数器
+
+    spawn telnet localhost 9901  ;# 启动 telnet
+
+    expect {
+        "Escape character is '^]'" {
+            send "\x1d"  ;# 发送 Ctrl+]，进入 telnet 控制台
+            expect "telnet>" {
+                send "quit\r"  ;# 发送 quit 命令退出 telnet
+            }
+        }
+    }
+
+    # 等待用户退出 telnet
+    #send_user "按下任意键继续，或者 Ctrl+C 退出\n"
+    #exec read -n 1 -s
+
+    # 清空终端输出
+    #exec clear
+}
